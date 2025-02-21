@@ -1,0 +1,8 @@
+streamlit
+gunicorn
+pandas
+supabase
+python-dotenv
+requests
+hmac
+hashlib
