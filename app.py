@@ -35,7 +35,6 @@ st.set_page_config(page_title="Job Listings Dashboard", page_icon="📌", layout
 
 query_params = st.query_params
 user_id = query_params.get("user_id")
-hashed_id = hash_id(user_id)
 
 # Streamlit UI
 st.title("📌 Job Listings Dashboard")
@@ -49,6 +48,7 @@ if user_id:
     st.session_state["user_id"] = user_id  # Store user ID in session state
     st.write(f"✅ Logged in as: **{user_id}**")
     # Fetch jobs from Supabase
+    hashed_id = hash_id(user_id)
     job_data = fetch_jobs(hashed_id)
 
     # Rename columns for proper capitalization
