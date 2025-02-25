@@ -4,3 +4,4 @@ pandas
 supabase
 python-dotenv
 requests
+streamlit-option-menu
