@@ -19,14 +19,18 @@ supabase: Client = create_client(url, key)
 
 # Function to fetch job data
 def fetch_jobs(hashed_id):
-    response = supabase.table("job_details").select("position, company, technical_requirements, experience, url, job_id").eq("hash_user_details", hashed_id).execute()
+    response = supabase.table("JOB").select("job_title, COMPANY!inner(company_name), job_skills_required, job_experience_level, job_url, job_id, USER_JOB!inner(user_id)").eq("USER_JOB.user_id", hashed_id).execute()
     if response.data:
-        return pd.DataFrame(response.data)  # Convert to DataFrame
-    return pd.DataFrame(columns=["Position", "Company", "Technical Requirements", "Experience", "URL"])  # Empty Table
+        df = pd.DataFrame(response.data)
+        df.drop(columns=["USER_JOB"], inplace=True)
+        df["company_name"] = df["COMPANY"].apply(lambda x: x["company_name"])
+        df.drop(columns=["COMPANY"], inplace=True)
+        return df  # Convert to DataFrame
+    return pd.DataFrame(columns=["Position", "Company", "Skills Required", "Experience Level", "URL"])  # Empty Table
 
 # Function to delete a job by ID
 def delete_job(job_id):
-    response = supabase.table("job_details").delete().eq("job_id", job_id).execute()
+    response = supabase.table("USER_JOB").delete().eq("job_id", job_id).eq("user_id", hashed_id).execute()
     return response
 
 # Function to hash credentials
@@ -41,6 +45,7 @@ def encode_pdf(pdf_bytes):
 # Function to call API for resume analysis
 def process_resume(resume_text, user_id):
     API_URL = "https://job-scraper-backend-e616ed8dec66.herokuapp.com/get_similarity"  # Replace with actual API URL
+    # API_URL = "http://127.0.0.1:5000/get_similarity"
     response = requests.post(API_URL, json={"resume_contents": encode_pdf(resume_text), "user_id": user_id})
     
     if response.status_code == 200:
@@ -91,11 +96,11 @@ elif page == "View Listings":
 
     # Rename columns for proper capitalization
     job_data.rename(columns={
-        "position": "Position",
-        "company": "Company",
-        "technical_requirements": "Technical Requirements",
-        "experience": "Experience",
-        "url": "URL",
+        "job_title": "Position",
+        "company_name": "Company",
+        "job_skills_required": "Technical Requirements",
+        "job_experience_level": "Experience",
+        "job_url": "URL",
         "job_id": "Job ID"
     }, inplace=True)
 
