@@ -5,3 +5,6 @@ supabase
 python-dotenv
 requests
 streamlit-option-menu
+python-docx
+leafmap
+openpyxl
