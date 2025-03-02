@@ -501,6 +501,9 @@ elif page == "Geospatial Visualization":
     st.caption("Visualize the locations of companies of your job listings on an interactive map!")
     st.markdown("---")
     df = fetch_job_locations(hashed_id)
+    missing_locations = df[df.isnull().any(axis=1)]["company_name"]
+    print(missing_locations)
+    df = df.dropna()
     filepath = "./job_locations.csv"
     df.to_csv(filepath, index=False, sep=",")
     center = [df["company_lat"].mean(), df["company_long"].mean()]
@@ -530,3 +533,12 @@ elif page == "Geospatial Visualization":
             name="Job Locations Heatmap",
         )
     m.to_streamlit(height=800)
+    st.markdown("---")
+    if not missing_locations.empty:
+        st.subheader("Missing Locations")
+        st.write("The following companies were excluded due to missing company addresses:")
+        for location in missing_locations:
+            st.write(f"- {location}")
+            
+
+    
