@@ -230,7 +230,7 @@ elif page == "Home":
 
     st.markdown("---")
     st.subheader("📩 Need Help or Want to Support Us?")
-    st.write("📧 **For inquiries:** Reach out at [bwee.support@gmail.com](mailto:bwee.support@gmail.com)")
+    st.write("📧 **For inquiries:** Reach out at [bwee.dev01@gmail.com](mailto:bwee.dev01@gmail.com)")
     st.write("☕ **Love this tool?** Buy me a coffee to keep this project alive!")
     
     st.markdown("---")
